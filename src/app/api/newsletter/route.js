@@ -46,7 +46,7 @@ export async function POST(req) {
             
             <div style="text-align: center; margin-bottom: 30px;">
               <img 
-                src="https://aprilbrn-fiul.vercel.app/APPPB.svg" 
+                src="https://aprilbrn-fiul.vercel.app/logo.png" 
                 alt="APRIL BORN" 
                 width="150"
                 style="display: block; margin: 0 auto;"
