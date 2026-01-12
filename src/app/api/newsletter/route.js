@@ -50,9 +50,13 @@ export async function POST(req) {
           <div style="max-width: 600px; margin: 0 auto; background-color: #000000; padding: 40px 20px;">
             
             <div style="text-align: center; margin-bottom: 30px;">
-              <h1 style="letter-spacing: 5px; font-size: 24px; margin: 0;">APRIL BORN</h1>
+               <img 
+                 src="https://aprilbrn-fiul.vercel.app/APPPB.svg" 
+                 alt="April Born" 
+                 style="width: 200px; height: auto; display: block; margin: 0 auto;" 
+               />
             </div>
-
+  
             <div style="width: 100%; height: 300px; background-color: #222; margin-bottom: 30px; display: flex; align-items: center; justify-content: center;">
                <img 
                  src="https://via.placeholder.com/600x400/333333/ffffff?text=APRIL+BORN+VISUALS" 

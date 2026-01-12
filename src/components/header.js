@@ -51,7 +51,7 @@ export default function Header() {
                  alt="April Born" 
                  // FIXED: h-8 (32px) for mobile, h-12 (48px) for desktop. 
                  // Fits inside the h-16 (64px) container.
-                 className="h-14 md:h-20 w-auto object-contain" 
+                 className="h-14 md:h-24 w-auto object-contain" 
                />
              </Link>
           </div>
