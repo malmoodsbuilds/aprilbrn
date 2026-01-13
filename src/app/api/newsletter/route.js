@@ -6,7 +6,7 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 );
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend("re_SY8yJX6S_BBiLmQpWRDKkhCdXeYZWFa77"); 
 
 export async function POST(req) {
   try {
