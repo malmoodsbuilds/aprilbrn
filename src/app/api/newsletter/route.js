@@ -78,7 +78,7 @@ export async function POST(req) {
     try {
       await resend.emails.send({
         from: 'April Born <onboarding@resend.dev>',
-        to: 'support@aprilborn.net', // This is where the alert goes
+        to: 'malakaimoodie@gmail.com', // This is where the alert goes
         subject: 'New Subscriber Alert',
         html: `<p>New sign up received: <strong>${email}</strong></p>`
       });
