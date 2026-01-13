@@ -77,7 +77,7 @@ export async function POST(req) {
     // 3. Send "Alert" Email to YOU (Notification)
     try {
       await resend.emails.send({
-        from: 'April Born <onboarding@resend.dev>',
+        from: 'April Born <newsletter@april-born.com>',
         to: 'malakaimoodie@gmail.com', // This is where the alert goes
         subject: 'New Subscriber Alert',
         html: `<p>New sign up received: <strong>${email}</strong></p>`
