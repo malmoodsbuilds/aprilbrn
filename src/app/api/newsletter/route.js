@@ -2,11 +2,14 @@ import { createClient } from "@supabase/supabase-js";
 import { Resend } from "resend";
 import { NextResponse } from "next/server";
 
+// Initialize Supabase
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 );
-const resend = new Resend("re_SY8yJX6S_BBiLmQpWRDKkhCdXeYZWFa77"); 
+
+// Initialize Resend with your API Key
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req) {
   try {
@@ -19,7 +22,7 @@ export async function POST(req) {
 
     if (dbError) throw dbError;
 
-    // 2. Send Email with Working Images
+    // 2. Send "Welcome" Email to the Fan
     await resend.emails.send({
       from: "April Born <onboarding@resend.dev>",
       to: email,
@@ -70,6 +73,19 @@ export async function POST(req) {
         </body>
       `,
     });
+
+    // 3. Send "Alert" Email to YOU (Notification)
+    try {
+      await resend.emails.send({
+        from: 'April Born <onboarding@resend.dev>',
+        to: 'support@aprilborn.net', // This is where the alert goes
+        subject: 'New Subscriber Alert',
+        html: `<p>New sign up received: <strong>${email}</strong></p>`
+      });
+    } catch (err) {
+      // If notification fails, we don't stop the user process
+      console.log("Notification failed, but user signed up ok.");
+    }
 
     return NextResponse.json({ success: true });
   } catch (error) {
