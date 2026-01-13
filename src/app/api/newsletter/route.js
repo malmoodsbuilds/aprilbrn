@@ -1,90 +1,79 @@
-import { NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
-import nodemailer from 'nodemailer';
+import { createClient } from "@supabase/supabase-js";
+import { Resend } from "resend";
+import { NextResponse } from "next/server";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 );
-
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_PASS,
-  },
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req) {
-  const { firstName, lastName, email } = await req.json();
-
-  if (!email || !email.includes('@')) {
-    return NextResponse.json({ error: 'Invalid email' }, { status: 400 });
-  }
-
-  // Save to Database
-  const { error } = await supabase
-    .from('newsletter')
-    .insert([{ first_name: firstName, last_name: lastName, email: email }]);
-
-  if (error) {
-    if (error.code === '23505') return NextResponse.json({ message: 'Already subscribed!' });
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
-
-  // Send the Email
   try {
-    await transporter.sendMail({
-      from: `"April Born" <${process.env.GMAIL_USER}>`,
+    const { email, firstName, lastName } = await req.json();
+
+    // 1. Save to Supabase
+    const { error: dbError } = await supabase
+      .from("newsletter")
+      .insert([{ email, first_name: firstName, last_name: lastName }]);
+
+    if (dbError) throw dbError;
+
+    // 2. Send Email with Working Images
+    await resend.emails.send({
+      from: "April Born <onboarding@resend.dev>",
       to: email,
-      subject: 'Welcome to the Movement 🕯️',
+      subject: "Welcome to April Born",
       html: `
-        <!DOCTYPE html>
-        <html>
-        <body style="margin: 0; padding: 0; background-color: #000000; font-family: Arial, sans-serif; color: #ffffff;">
+        <body style="margin: 0; padding: 0; background-color: #000000; color: #ffffff; font-family: Arial, sans-serif;">
           <div style="max-width: 600px; margin: 0 auto; background-color: #000000; padding: 40px 20px;">
             
-            <div style="text-align: center; margin-bottom: 30px;">
+            <div style="text-align: center; margin-bottom: 40px;">
               <img 
-                src="https://aprilbrn-fiul.vercel.app/logo.png" 
+                src="https://i.ibb.co/y3LyMgm/logo.png" 
                 alt="APRIL BORN" 
-                width="150"
+                width="180" 
                 style="display: block; margin: 0 auto;"
               />
             </div>
 
-            <div style="width: 100%; margin-bottom: 30px;">
-               <img 
-                 src="https://via.placeholder.com/600x400/222222/666666?text=APRIL+BORN+COLLECTION" 
-                 alt="Collection" 
-                 style="width: 100%; height: auto; display: block;"
-               />
+            <div style="margin-bottom: 40px;">
+              <img 
+                src="https://i.ibb.co/S4Bj9wg3/IMG-7384.jpg" 
+                alt="Collection Preview" 
+                style="width: 100%; height: auto; border: 1px solid #333333;" 
+              />
             </div>
 
             <div style="text-align: center; padding: 0 10px;">
-              <p style="font-size: 14px; line-height: 1.6; color: #cccccc; margin-bottom: 20px;">
-                We would like to thank you for joining the movement.
+              <h2 style="font-size: 20px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; color: #ffffff;">
+                Welcome to the Movement
+              </h2>
+              <p style="color: #cccccc; font-size: 14px; line-height: 1.6; margin-bottom: 30px;">
+                You are now on the list. We will notify you the moment the collection drops.
               </p>
-              <div style="border-top: 1px solid #333; margin: 20px 0;"></div>
-              <p style="font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: #666;">Your Welcome Code</p>
               
-              <div style="background-color: #ffffff; color: #000000; padding: 15px 30px; display: inline-block; font-size: 20px; font-weight: bold; letter-spacing: 3px; margin: 15px 0;">
-                APRIL10
+              <div style="border-top: 1px solid #333333; border-bottom: 1px solid #333333; padding: 20px 0; margin: 30px 0;">
+                <p style="font-size: 12px; color: #888888; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 10px 0;">
+                  Your Welcome Code
+                </p>
+                <p style="font-size: 24px; font-weight: bold; color: #ffffff; letter-spacing: 3px; margin: 0;">
+                  APRIL10
+                </p>
               </div>
             </div>
 
-            <div style="text-align: center; margin-top: 40px; font-size: 10px; color: #444;">
-              &copy; 2026 APRIL BORN. LONDON.
+            <div style="text-align: center; margin-top: 40px; color: #555555; font-size: 10px; text-transform: uppercase; letter-spacing: 1px;">
+              © 2026 April Born. London.
             </div>
-
           </div>
         </body>
-        </html>
       `,
     });
-  } catch (err) {
-    console.error('Email failed:', err);
-  }
 
-  return NextResponse.json({ message: 'Success' });
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("Newsletter error:", error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
 } 
