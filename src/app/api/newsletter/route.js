@@ -13,8 +13,17 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req) {
   try {
+    // --- DEBUG TRAP START ---
+    const key = process.env.RESEND_API_KEY;
+    console.log("--- DEBUGGING API KEY ---");
+    console.log("1. Does Key Exist?", !!key);
+    console.log("2. Key Length:", key ? key.length : "N/A");
+    console.log("3. First 3 chars:", key ? key.substring(0, 3) : "N/A");
+    console.log("4. Last 3 chars:", key ? key.substring(key.length - 3) : "N/A");
+    // --- DEBUG TRAP END ---
+
     const { email, firstName, lastName } = await req.json();
-    console.log("1. Received request for:", email); // LOG ADDED
+    console.log("1. Received request for:", email);
 
     // 1. Save to Supabase
     const { error: dbError } = await supabase
@@ -22,13 +31,13 @@ export async function POST(req) {
       .insert([{ email, first_name: firstName, last_name: lastName }]);
 
     if (dbError) {
-      console.error("Supabase Error:", dbError); // LOG ADDED
+      console.error("Supabase Error:", dbError);
       throw dbError;
     }
-    console.log("2. Supabase insert successful"); // LOG ADDED
+    console.log("2. Supabase insert successful");
 
     // 2. Send "Welcome" Email to the Fan
-    console.log("3. Attempting to send Welcome Email via Resend..."); // LOG ADDED
+    console.log("3. Attempting to send Welcome Email via Resend...");
     
     // Capturing the result to log it
     const emailResult = await resend.emails.send({
@@ -85,7 +94,7 @@ export async function POST(req) {
     // LOGGING THE RESULT FROM RESEND
     console.log("4. Resend API Result:", JSON.stringify(emailResult, null, 2)); 
 
-    // CHECK IF RESEND RETURNED AN ERROR OBJECT (Resend often returns 200 OK but includes an error object)
+    // CHECK IF RESEND RETURNED AN ERROR OBJECT
     if (emailResult.error) {
         console.error("CRITICAL: Resend returned an error:", emailResult.error);
         throw new Error(emailResult.error.message);
@@ -93,14 +102,14 @@ export async function POST(req) {
 
     // 3. Send "Alert" Email to YOU (Notification)
     try {
-      console.log("5. Sending Admin Notification..."); // LOG ADDED
+      console.log("5. Sending Admin Notification..."); 
       await resend.emails.send({
         from: 'April Born <newsletter@april-born.com>',
-        to: 'malakaimoodie@gmail.com', // This is where the alert goes
+        to: 'malakaimoodie@gmail.com',
         subject: 'New Subscriber Alert',
         html: `<p>New sign up received: <strong>${email}</strong></p>`
       });
-      console.log("6. Admin Notification Sent"); // LOG ADDED
+      console.log("6. Admin Notification Sent"); 
     } catch (err) {
       // If notification fails, we don't stop the user process
       console.log("Notification failed, but user signed up ok:", err);
@@ -108,7 +117,7 @@ export async function POST(req) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Newsletter error FINAL CATCH:", error); // LOG ADDED
+    console.error("Newsletter error FINAL CATCH:", error); 
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 } 
