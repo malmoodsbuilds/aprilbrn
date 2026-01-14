@@ -24,7 +24,7 @@ export async function POST(req) {
 
     // 2. Send "Welcome" Email to the Fan
     await resend.emails.send({
-      from: "April Born <onboarding@resend.dev>",
+      from: "April Born <newsletter@april-born.com>",
       to: email,
       subject: "Welcome to April Born",
       html: `
