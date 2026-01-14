@@ -1,27 +1,32 @@
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
-import NewsletterForm from "@/components/NewsletterForm"; // I am importing the tool I just built
+import NewsletterForm from "@/components/NewsletterForm";
 
-// I force the page to never cache, so it always shows fresh product data.
+// I am forcing the page to never cache so my product data is always fresh
 export const revalidate = 0;
 
-// --- FOOTER COMPONENT ---
+// I am using this component to hold my newsletter and social info
 const Footer = () => {
   return (
-    <footer className="bg-[#1c1c1c] text-white pt-16 pb-8 border-t border-gray-800">
-      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-12 gap-12">
+    <footer className="bg-[#1c1c1c] text-white w-full py-24">
+      <div className="max-w-4xl mx-auto px-6">
         
-        {/* NEWSLETTER SECTION */}
-        <div className="md:col-span-5">
-          <h3 className="font-black uppercase italic text-2xl mb-4 tracking-tighter">Unlock 10% Off</h3>
-          <p className="text-xs text-gray-400 mb-6 uppercase tracking-widest">Subscribe for early access.</p>
+        {/* I am centering and enlarging my newsletter section here */}
+        <div className="flex flex-col items-center text-center">
+          <h3 className="font-black uppercase italic text-5xl mb-6 tracking-tighter">
+            Unlock 10% Off
+          </h3>
+          <p className="text-sm text-gray-400 mb-10 uppercase tracking-widest">
+            I want people to subscribe here for early access
+          </p>
           
-          {/* I PLACED MY NEW WORKING COMPONENT HERE */}
-          <NewsletterForm />
-          
+          {/* I am making this form container much larger for a professional look */}
+          <div className="w-full max-w-2xl transform scale-125 my-10">
+            <NewsletterForm />
+          </div>
         </div>
 
-        {/* LINKS SECTION - HIDDEN FOR LAUNCH */}
+        {/* I am hiding these links for my launch but keeping the code here */}
         {/* <div className="md:col-span-3 md:pl-8">
           <h4 className="font-bold uppercase tracking-widest text-xs mb-6 text-gray-300">Links</h4>
           <ul className="space-y-3 text-xs text-gray-400 font-medium uppercase tracking-wide">
@@ -30,7 +35,7 @@ const Footer = () => {
         </div>
         */}
 
-        {/* SERVICE SECTION - HIDDEN FOR LAUNCH */}
+        {/* I am hiding the service section until I am ready to go live */}
         {/* <div className="md:col-span-4">
           <h4 className="font-bold uppercase tracking-widest text-xs mb-6 text-gray-300">Service</h4>
           <div className="text-xs text-gray-400 space-y-2 mb-6 font-medium">
@@ -41,53 +46,54 @@ const Footer = () => {
         */}
       </div>
 
-      {/* COPYRIGHT & SLOGAN */}
-      <div className="max-w-7xl mx-auto px-6 mt-16 pt-8 border-t border-gray-800 flex flex-col items-center text-[10px] text-gray-500 uppercase tracking-wider">
+      {/* I am keeping my brand slogan and copyright at the very bottom */}
+      <div className="max-w-7xl mx-auto px-6 mt-20 pt-8 border-t border-gray-800 flex flex-col items-center text-[10px] text-gray-500 uppercase tracking-wider">
         <p className="mb-2">born twice live forever</p>
         <p>© 2026 April Born.</p>
-        <div className="flex space-x-2 opacity-50 mt-4"><span>Visa</span> • <span>Mastercard</span> • <span>PayPal</span></div>
+        <div className="flex space-x-2 opacity-50 mt-4">
+          <span>Visa</span> • <span>Mastercard</span> • <span>PayPal</span>
+        </div>
       </div>
     </footer>
   );
 };
 
-// --- MAIN HOMEPAGE ---
+// I am defining my main home page structure here
 export default async function Home() {
   
-  // 1. GET DATA
+  // I am grabbing my product data from Supabase
   const { data: products } = await supabase
     .from('products')
     .select('*')
     .order('created_at', { ascending: true });
 
-  // 2. DYNAMIC LAYOUT LOGIC
+  // I am setting up my dynamic grid logic for when I show products later
   let gridClass = "grid grid-cols-1 md:grid-cols-3 gap-8"; 
 
   if (products && (products.length === 2 || products.length === 4)) {
     gridClass = "grid grid-cols-1 md:grid-cols-2 gap-8";
   }
 
-  // 3. SHOW THE PAGE
   return ( 
     <main className="min-h-screen bg-white flex flex-col">
       
-      {/* HEADER / LOGO SECTION - KEPT VISIBLE */}
-      <nav className="p-6 flex justify-between items-center border-b border-gray-100">
-        <h1 className="font-black italic text-xl uppercase tracking-tighter">April Born</h1>
-        <div className="hidden md:flex space-x-6 text-[10px] font-bold uppercase tracking-widest">
+      {/* I am keeping this header visible so users see the April Born brand */}
+      <nav className="p-8 flex justify-between items-center border-b border-gray-100 bg-white">
+        <h1 className="font-black italic text-2xl uppercase tracking-tighter">April Born</h1>
+        <div className="hidden md:flex space-x-8 text-[11px] font-bold uppercase tracking-widest">
           <span>Men</span>
           <span>Women</span>
           <span>Search</span>
+          <span>Quote</span>
         </div>
       </nav>
 
-      {/* THE SECTIONS BELOW ARE COMMENTED OUT (HIDDEN) UNTIL FULL LAUNCH */}
-      
+      {/* I am hiding the hero and product sections below until my full launch */}
       {/* <div className="relative w-full h-[85vh] bg-gray-900">
         <img src="/hero.jpeg" alt="Campaign" className="w-full h-full object-cover" />
         <div className="absolute bottom-12 left-6 md:left-12 text-white">
           <h2 className="text-4xl md:text-6xl font-black uppercase italic mb-4 drop-shadow-md">
-            April Brn <br /> Pre-Spring '26
+            April Brn <br /> Pre Spring '26
           </h2>
           <button className="bg-white text-black px-8 py-3 uppercase text-xs font-bold tracking-widest hover:bg-gray-200 transition">
             Shop Now
@@ -121,13 +127,11 @@ export default async function Home() {
       </section> 
       */}
 
-      {/* NEWSLETTER LANDING AREA */}
+      {/* I am making this the central point of my page so the newsletter is slap bang in the middle */}
       <div className="flex-grow flex items-center justify-center bg-[#1c1c1c]">
-        <div className="w-full max-w-xl p-8">
-           <Footer />
-        </div>
+        <Footer />
       </div>
 
     </main>
   );
-}
+} 
