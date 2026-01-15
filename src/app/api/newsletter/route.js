@@ -80,7 +80,7 @@ export async function POST(req) {
 
             <div style="text-align: center; margin-bottom: 40px;">
 
-              <img src="https://i.ibb.co/y3LyMgm/logo.png" alt="APRIL BORN" width="180" style="display: block; margin: 0 auto;" />
+              <img src="/logo.png" alt="APRIL BORN" width="180" style="display: block; margin: 0 auto;" />
 
             </div>
 
