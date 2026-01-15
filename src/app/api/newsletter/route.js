@@ -11,7 +11,7 @@ const supabase = createClient(
 export async function POST(req) {
   try {
     // --- PASTE YOUR API KEY INSIDE THE QUOTES BELOW ---
-    const resend = new Resend("re_G9zwrK22_8AShXWEdwxuKf3o4nsas72YK"); 
+    const resend = new Resend("re_cES4kKcC_EEY9bjZBoQfPDg44c5c4VaEm"); 
 
     // FIX 1: MATCHING THE FRONTEND DATA (snake_case)
     // We now read 'first_name' and 'last_name' exactly as the form sends them
