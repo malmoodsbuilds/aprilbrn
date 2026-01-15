@@ -86,7 +86,7 @@ export async function POST(req) {
 
             <div style="margin-bottom: 40px;">
 
-              <img src="/logo.png" alt="Collection Preview" style="width: 100%; height: auto; border: 1px solid #333333;" />
+              <img src="/IMG_7384.jpeg" alt="Collection Preview" style="width: 100%; height: auto; border: 1px solid #333333;" />
 
             </div>
 
