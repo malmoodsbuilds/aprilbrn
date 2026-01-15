@@ -13,21 +13,12 @@ export default function NewsletterForm() {
     setStatus('loading');
     setErrorMessage('');
 
-    // --- DEBUG LOG START ---
-    console.log("DEBUG: Submit initiated.");
-    console.log("DEBUG: Form Data:", { firstName, lastName, email });
-    // -----------------------
-
     try {
-      console.log("DEBUG: Sending request to /api/newsletter...");
-      
-      // We use fetch to hit your route.js file
       const res = await fetch('/api/newsletter', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        // We send the data using snake_case keys to match your DB expectations
         body: JSON.stringify({ 
           first_name: firstName, 
           last_name: lastName, 
@@ -35,41 +26,32 @@ export default function NewsletterForm() {
         }),
       });
 
-      console.log("DEBUG: Response status:", res.status);
-      
       const data = await res.json();
-      console.log("DEBUG: Response data:", data);
 
       if (!res.ok) {
-        // Handle explicit errors returned from route.js
-        console.error("DEBUG: Server error detected.");
         throw new Error(data.error || "Server error");
       }
 
-      // SUCCESS
-      console.log("DEBUG: Success path triggered.");
+      // SUCCESS - No alert box, just state change
       setStatus('success');
       setFirstName('');
       setLastName('');
       setEmail('');
-      alert("Debug: Signup Successful! Check Supabase and your Email.");
 
     } catch (error) {
-      console.error('DEBUG: Submission Error:', error);
+      console.error('Submission Error:', error);
       setStatus('error');
       
-      // specific check for the duplicate key error to make it visible
+      // Handle duplicate emails gracefully without popups
       if (error.message && error.message.includes("duplicate key")) {
-         alert("Debug Error: This email is already subscribed.");
          setErrorMessage("You are already subscribed.");
       } else {
-         alert(`Debug Error: ${error.message}`);
          setErrorMessage(error.message || "Connection failed. Please try again.");
       }
     }
   };
 
-  // SUCCESS STATE
+  // SUCCESS STATE - This shows "Welcome to the family" instead of the form
   if (status === 'success') {
     return (
       <div className="p-4 bg-gray-900 border border-gray-800 text-center animate-fade-in">

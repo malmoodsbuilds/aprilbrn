@@ -66,7 +66,7 @@ export async function POST(req) {
 
     const emailResult = await resend.emails.send({
 
-      from: "April Born <newsletter@april-born.com>",
+      from: "April Born < @april-born.com>",
 
       to: email,
 
@@ -140,7 +140,7 @@ export async function POST(req) {
 
         from: 'April Born <newsletter@april-born.com>',
 
-        to: 'malakaimoodie@gmail.com',
+        to: 'malakaimoodie@gmail.com,support@aprilborn.com',
 
         subject: 'New Subscriber Alert',
 
