@@ -92,7 +92,7 @@ export async function POST(req) {
       await resend.emails.send({
         from: 'April Born <newsletter@april-born.com>',
         // CHANGE THE EMAILS BELOW TO YOUR REAL ONES
-        to: ['malakaimoodie@gmail.com', 'support@april-born.com'], 
+        to: ['malakaimoodie@gmail.com', 'support@april-born.net'], 
         subject: 'New Subscriber Alert',
         html: `<p>New sign up received: <strong>${email}</strong></p><p>Name: ${first_name} ${last_name}</p>`
       });
